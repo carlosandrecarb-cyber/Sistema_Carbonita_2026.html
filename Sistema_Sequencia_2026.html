@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequência Didática 2026 - Carbonita/MG</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === VARIÁVEIS DE DESIGN (IDÊNTICO AOS ANEXOS) === */
+        :root {
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --blue-primary: #3b82f6;
+            --blue-hover: #2563eb;
+            --dark-header: #212529;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --nav-bg: #f1f5f9;
+            --yellow-bg: #fffbeb;
+            --yellow-text: #92400e;
+            --yellow-border: #fde68a;
+            --green-btn: #10b981;
+            --red-tag: #dc2626;
+        }
+
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; }
+
+        /* === CAIXA DE MENSAGEM (MODAL) === */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .modal-box { background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-box i { font-size: 3rem; color: var(--blue-primary); margin-bottom: 15px; }
+        .modal-box h3 { margin: 0 0 10px 0; color: var(--dark-header); }
+        .modal-box p { color: var(--text-muted); margin-bottom: 20px; }
+        .btn-modal { background: var(--blue-primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
+
+        /* === TELA DE LOGIN === */
+        #login-view { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+        .login-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 16px; padding: 40px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .login-card img { max-width: 100%; height: auto; margin-bottom: 20px; }
+        .login-card h2 { margin: 0 0 5px 0; color: var(--dark-header); font-size: 1.4rem; }
+        .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; }
+        
+        .login-select, .login-input { width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 1rem; background: #f8fafc; margin-bottom: 15px; box-sizing: border-box;}
+        .login-select:focus, .login-input:focus { outline: none; border-color: var(--blue-primary); background: white; }
+
+        .btn-outline { background: transparent; border: 1px solid var(--blue-primary); color: var(--blue-primary); padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-outline:hover { background: #eff6ff; }
+        .btn-dark { background: var(--dark-header); border: none; color: white; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+
+        /* === LAYOUT PRINCIPAL (FIEL ÀS IMAGENS) === */
+        #app-view { display: none; max-width: 1200px; margin: 0 auto; }
+        
+        /* O Banner com a Logo no Topo */
+        .top-banner { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .top-banner img { max-width: 100%; max-height: 70px; object-fit: contain; }
+
+        /* A Topbar de Navegação */
+        .topbar { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); flex-wrap: wrap; gap: 15px;}
+        .brand { display: flex; flex-direction: column; }
+        .brand strong { font-size: 1.2rem; color: var(--dark-header); }
+        .role-tag { display: inline-block; color: white; font-size: 0.65rem; font-weight: bold; padding: 3px 8px; border-radius: 12px; margin-top: 4px; width: max-content; }
+        .tag-prof { background: var(--blue-primary); }
+        .tag-espec { background: var(--red-tag); }
+
+        /* As Pílulas de Navegação (Pill Nav) */
+        .nav-pills { background: var(--nav-bg); padding: 6px; border-radius: 50px; display: flex; gap: 5px; border: 1px solid var(--border-light); overflow-x: auto;}
+        .nav-item { padding: 8px 16px; border-radius: 50px; border: none; background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap;}
+        .nav-item:hover { color: var(--text-main); }
+        .nav-item.active { background: white; color: var(--blue-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .nav-sair { color: var(--red-tag); }
+
+        /* === CARTÕES E CONTEÚDO === */
+        .view-section { display: none; animation: fadeIn 0.3s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 30px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid var(--bg-body); padding-bottom: 15px;}
+        .card-title { font-size: 1.25rem; font-weight: 600; color: var(--dark-header); margin: 0; display: flex; align-items: center; gap: 8px;}
+        
+        .auto-save-status { font-size: 0.85rem; font-weight: 600; padding: 5px 12px; border-radius: 50px; background: #f1f5f9; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+
+        /* Legenda de Inclusão / Alertas */
+        .alert-yellow { background: var(--yellow-bg); border: 1px solid var(--yellow-border); color: var(--yellow-text); padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .badge-dark { background: var(--dark-header); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin: 0 2px;}
+
+        /* Formulários Inteligentes */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-full { grid-column: 1 / -1; }
+        label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; color: var(--text-main); }
+        input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; background: #f8fafc; transition: 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue-primary); background: white; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        /* Checkbox Multi-seleção (Interdisciplinar) */
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); }
+        .checkbox-label { display: flex; align-items: center; gap: 5px; font-weight: 500; font-size: 0.85rem; cursor: pointer; background: white; padding: 5px 12px; border-radius: 50px; border: 1px solid var(--border-light); transition: 0.2s;}
+        .checkbox-label:hover { border-color: var(--blue-primary); }
+
+        /* Botões */
+        .btn-primary { background: var(--blue-primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
+        .btn-primary:hover { background: var(--blue-hover); }
+        .btn-success { background: var(--green-btn); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem;}
+
+        /* Tabelas Escuras */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; }
+        th { background: var(--dark-header); color: white; padding: 12px 15px; text-align: left; font-weight: 600; }
+        td { padding: 12px 15px; border-bottom: 1px solid var(--border-light); color: var(--text-main); }
+        tr:hover td { background: #f8fafc; }
+
+        /* Ocultar elementos na impressão */
+        @media print {
+            body { background: white; padding: 0; }
+            .topbar, .pill-nav, .btn-primary, .btn-success, .alert-yellow, .auto-save-status { display: none !important; }
+            .card { border: none; padding: 0; box-shadow: none; margin-bottom: 30px; page-break-inside: avoid;}
+            .card-header { border-bottom: 2px solid black; padding-bottom: 5px; margin-bottom: 15px;}
+            input, textarea, select { border: 1px solid #000; background: transparent; padding: 6px; border-radius: 0; color: black; box-shadow: none; resize: none;}
+            th { background: #e2e8f0 !important; color: black !important; border: 1px solid black; }
+            td { border: 1px solid black; }
+            .view-section { display: block !important; }
+            .logos-banner { border: none; box-shadow: none; border-bottom: 2px solid black; border-radius: 0; padding-bottom: 15px; margin-bottom: 20px;}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-box">
+            <i class="fas fa-check-circle" id="modal-icon"></i>
+            <h3 id="modal-title">Sucesso</h3>
+            <p id="modal-text">Ação concluída.</p>
+            <button class="btn-modal" onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- TELA DE LOGIN -->
+    <div id="login-view">
+        <div class="login-card">
+            <!-- LOGO OFICIAL -->
+            <img src="image_cba405.png" alt="Logos Institucionais" onerror="this.style.display='none'">
+            <h2>SEQUÊNCIA DIDÁTICA</h2>
+            <p>CARBONITA / MG</p>
+            
+            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light); margin-bottom: 20px; text-align: left;">
+                <label>Selecione seu Nome (Cursista):</label>
+                <select id="login-usuario" class="login-select"><option value="">Carregando cursistas...</option></select>
+                <label>Senha:</label>
+                <input type="password" id="login-senha" class="login-input" placeholder="Sua senha de acesso">
+                <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="iniciarSessao('cursista')"><i class="fas fa-book-open"></i> Acessar Meu Caderno</button>
+            </div>
+            
+            <button class="btn-dark" onclick="iniciarSessao('formador')"><i class="fas fa-shield-alt"></i> Acesso Formador Municipal</button>
+        </div>
+    </div>
+
+    <!-- SISTEMA PRINCIPAL -->
+    <div id="app-view">
+        
+        <!-- BANNER COM A LOGO NO TOPO -->
+        <div class="logos-banner">
+            <img src="image_cba405.png" alt="Logos Institucionais" onerror="this.style.display='none'">
+        </div>
+
+        <!-- TOPBAR DE NAVEGAÇÃO FIEL ÀS IMAGENS -->
+        <div class="topbar">
+            <div class="brand">
+                <strong>SEQUÊNCIA DIDÁTICA - CARBONITA/MG</strong>
+                <span id="badge-perfil" class="role-tag tag-prof">CURSISTA</span>
+            </div>
+            
+            <!-- NAVEGAÇÃO EM PÍLULAS (MENU PROFESSOR) -->
+            <div class="nav-pills" id="menu-professor" style="display: none;">
+                <button class="nav-item active" onclick="trocarAba(this, 'c-ident')"><i class="fas fa-id-badge"></i> Identificação</button>
+                <button class="nav-item" onclick="trocarAba(this, 'c-matriz')"><i class="fas fa-sitemap"></i> Matriz</button>
+                <button class="nav-item" onclick="trocarAba(this, 'c-planos')"><i class="fas fa-chalkboard"></i> Planos</button>
+                <button class="nav-item" onclick="trocarAba(this, 'c-acomp')"><i class="fas fa-users"></i> Acompanhamento</button>
+                <button class="nav-item nav-sair" onclick="terminarSessao()"><i class="fas fa-power-off"></i> Sair</button>
+            </div>
+
+            <!-- NAVEGAÇÃO EM PÍLULAS (MENU FORMADOR) -->
+            <div class="nav-pills" id="menu-formador" style="display: none;">
+                <button class="nav-item active" onclick="trocarAba(this, 'f-cadastros')"><i class="fas fa-user-plus"></i> 1. Cursistas</button>
+                <button class="nav-item" onclick="trocarAba(this, 'f-extrator')"><i class="fas fa-database"></i> 2. Banco de Habilidades</button>
+                <button class="nav-item" onclick="trocarAba(this, 'f-radar')"><i class="fas fa-satellite-dish"></i> 3. Radar</button>
+                <button class="nav-item nav-sair" onclick="terminarSessao()"><i class="fas fa-power-off"></i> Sair</button>
+            </div>
+        </div>
+
+        <!-- ==================== VISÃO FORMADOR MUNICIPAL ==================== -->
+        
+        <div id="f-cadastros" class="view-section active role-formador">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-users-cog"></i> Gestão de Cursistas e Escolas</h2></div>
+                <div class="form-grid">
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid var(--border-light);">
+                        <label>Cadastrar Escola:</label>
+                        <input type="text" id="f_nova_escola" placeholder="Ex: E.M. Mestra Aurora">
+                        <button class="btn-primary" style="margin-top:10px; width:100%; justify-content:center;" onclick="addEscola()">Salvar Escola</button>
+                    </div>
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid var(--border-light);">
+                        <label>Cadastrar Cursista (Nome e Senha):</label>
+                        <input type="text" id="f_novo_cursista" placeholder="Nome Completo" style="margin-bottom:10px;">
+                        <input type="password" id="f_nova_senha" placeholder="Senha de Acesso">
+                        <button class="btn-primary" style="margin-top:10px; width:100%; justify-content:center;" onclick="addCursista()">Salvar Cursista</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="f-extrator" class="view-section role-formador">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-magic"></i> Extração Inteligente de Habilidades (PDFs)</h2></div>
+                <div class="alert-yellow"><i class="fas fa-info-circle"></i> Defina os filtros, cole o texto do PDF e o sistema organiza tudo no Banco de Dados para os cursistas.</div>
+                
+                <div class="form-grid">
+                    <div><label>Ano de Escolaridade</label><select id="f_ano"><option>1º Ano</option><option>2º Ano</option><option>3º Ano</option><option>4º Ano</option><option>5º Ano</option><option>Multisseriado</option></select></div>
+                    <div><label>Componente Curricular</label><select id="f_comp"><option>Língua Portuguesa</option><option>Matemática</option><option>Ciências da Natureza</option><option>História</option><option>Geografia</option><option>Arte</option><option>Educação Física</option><option>Ensino Religioso</option></select></div>
+                    <div class="form-full"><label>Fonte Oficial</label><select id="f_fonte"><option>Matriz Curricular Priorizada</option><option>Plano de Curso Oficial</option><option>Cadernos Reúna</option></select></div>
+                    <div class="form-full"><label>Cole o conteúdo do PDF aqui:</label><textarea id="f_raw_text" rows="5" placeholder="Ex: EF02MA04 - Compor e decompor..."></textarea></div>
+                    <div class="form-full"><button class="btn-primary" style="width: 100%; justify-content:center; font-size: 1rem;" onclick="processarHabilidadesPDF()">Processar e Salvar no Banco de Dados</button></div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: var(--dark-header);">Habilidades Salvas no Banco (Visualização)</h3>
+                <table>
+                    <thead><tr><th>Código</th><th>Habilidade</th><th>Ano / Comp.</th><th>Fonte</th></tr></thead>
+                    <tbody id="tbody-banco"><tr><td colspan="4" style="text-align:center;">Nenhuma habilidade cadastrada.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="f-radar" class="view-section role-formador">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-satellite-dish"></i> Radar de Monitoramento</h2>
+                    <button class="btn-primary" onclick="atualizarRadar()"><i class="fas fa-sync-alt"></i> Atualizar Radar</button>
+                </div>
+                <table>
+                    <thead><tr><th>Cursista</th><th>Escola</th><th>Etapa Atual</th><th>Última Ação</th></tr></thead>
+                    <tbody id="tbody-radar"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ==================== VISÃO CURSISTA ==================== -->
+        
+        <div id="c-ident" class="view-section role-cursista">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-file-signature"></i> 1. Identificação da Sequência</h2>
+                    <span class="auto-save-status"><i class="fas fa-cloud"></i> Salvo na Sessão</span>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-full"><label>Escola</label><select id="c_escola" class="auto-save dyn-escolas"></select></div>
+                    <div><label>Ano/Turma</label><select id="c_ano" class="auto-save" onchange="carregarHabsCursista()"><option value="">Selecione...</option><option>1º Ano</option><option>2º Ano</option><option>3º Ano</option><option>4º Ano</option><option>5º Ano</option><option>Multisseriado</option></select></div>
+                    <div><label>Duração Prevista</label><input type="text" id="c_duracao" class="auto-save" placeholder="Ex: 6 aulas"></div>
+                    
+                    <div class="form-full">
+                        <label>Componentes Curriculares (Marque vários para projetos Interdisciplinares):</label>
+                        <div class="checkbox-group" id="c_componentes" onchange="carregarHabsCursista()">
+                            <label class="checkbox-label"><input type="checkbox" value="Língua Portuguesa" class="auto-save-check"> Língua Portuguesa</label>
+                            <label class="checkbox-label"><input type="checkbox" value="Matemática" class="auto-save-check"> Matemática</label>
+                            <label class="checkbox-label"><input type="checkbox" value="Ciências da Natureza" class="auto-save-check"> Ciências da Natureza</label>
+                            <label class="checkbox-label"><input type="checkbox" value="História" class="auto-save-check"> História</label>
+                            <label class="checkbox-label"><input type="checkbox" value="Geografia" class="auto-save-check"> Geografia</label>
+                            <label class="checkbox-label"><input type="checkbox" value="Arte" class="auto-save-check"> Arte</label>
+                            <label class="checkbox-label"><input type="checkbox" value="Educação Física" class="auto-save-check"> Educação Física</label>
+                            <label class="checkbox-label"><input type="checkbox" value="Ensino Religioso" class="auto-save-check"> Ensino Religioso</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="c-matriz" class="view-section role-cursista">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-sitemap"></i> 2. Diagnóstico e Matriz Global</h2><span class="auto-save-status"><i class="fas fa-cloud"></i> Salvo na Sessão</span></div>
+                
+                <div class="form-grid">
+                    <div class="form-full"><label>Ponto de Partida (Diagnóstico e Evidências)</label><textarea id="c_diag" class="auto-save" rows="2"></textarea></div>
+                    <div class="form-full"><label>Objetivos de Aprendizagem</label><textarea id="c_obj" class="auto-save" rows="2"></textarea></div>
+                    <div class="form-full">
+                        <label>Habilidade Oficial Priorizada (Filtrada do Banco de Dados)</label>
+                        <select id="c_hab" class="auto-save dyn-habs"><option value="">Selecione a habilidade...</option></select>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--dark-header); margin-top: 30px; border-bottom: 2px solid var(--border-light); padding-bottom: 5px;">Estrutura da Intervenção</h3>
+                <table>
+                    <thead><tr><th style="width:15%">ETAPA</th><th style="width:42%">Objetos de Conhecimentos</th><th style="width:43%">Habilidades e Conteúdos Relacionados</th></tr></thead>
+                    <tbody>
+                        <tr><td style="font-weight:bold; text-align:center;">INTRODUÇÃO</td><td><textarea id="m_int_obj" class="auto-save" rows="2" style="border:none;"></textarea></td><td><textarea id="m_int_hab" class="auto-save" rows="2" style="border:none;"></textarea></td></tr>
+                        <tr><td style="font-weight:bold; text-align:center;">SISTEMATIZAÇÃO</td><td><textarea id="m_sis_obj" class="auto-save" rows="2" style="border:none;"></textarea></td><td><textarea id="m_sis_hab" class="auto-save" rows="2" style="border:none;"></textarea></td></tr>
+                        <tr><td style="font-weight:bold; text-align:center;">AVALIAÇÃO</td><td><textarea id="m_ava_obj" class="auto-save" rows="2" style="border:none;"></textarea></td><td><textarea id="m_ava_hab" class="auto-save" rows="2" style="border:none;"></textarea></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="c-planos" class="view-section role-cursista">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-chalkboard"></i> 3. Os 6 Planos de Aula (Interdisciplinares)</h2><span class="auto-save-status"><i class="fas fa-cloud"></i> Salvo na Sessão</span></div>
+                <div id="container-planos"></div>
+            </div>
+        </div>
+
+        <div id="c-acomp" class="view-section role-cursista">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-users"></i> 4. Acompanhamento e Replanejamento</h2><span class="auto-save-status"><i class="fas fa-cloud"></i> Salvo na Sessão</span></div>
+                
+                <div class="alert-yellow"><i class="fas fa-info-circle"></i> <strong>Legenda Intervenção:</strong> <span class="badge-dark">S</span> Sim <span class="badge-dark">N</span> Não</div>
+                
+                <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                    <input type="text" id="paste_alunos" placeholder="Cole os nomes dos alunos (um por linha)...">
+                    <button class="btn-primary" onclick="importarAlunos()"><i class="fas fa-download"></i> Importar</button>
+                </div>
+
+                <table>
+                    <thead><tr><th style="width:40px;">Nº</th><th>Estudante</th><th>Avanços / Evidências</th><th style="width:120px;">Intervenção?</th></tr></thead>
+                    <tbody id="tbody-alunos"><tr><td colspan="4" style="text-align:center;">Nenhum estudante importado.</td></tr></tbody>
+                </table>
+
+                <h3 style="margin-top: 30px; border-top: 1px solid var(--border-light); padding-top: 20px; color: var(--dark-header);">Avaliação - Refletir e Replanejar</h3>
+                <div class="form-grid">
+                    <div class="form-full"><label>O que funcionou bem?</label><textarea id="c_r1" class="auto-save" rows="2"></textarea></div>
+                    <div class="form-full"><label>Quais dificuldades permaneceram?</label><textarea id="c_r2" class="auto-save" rows="2"></textarea></div>
+                    <div class="form-full"><label>Ações a retomar / Habilidades faltantes:</label><textarea id="c_r3" class="auto-save" rows="2"></textarea></div>
+                    <div class="form-full" style="border-top: 2px dashed var(--border-light); padding-top: 20px;">
+                        <label style="color: var(--blue-primary);"><i class="fas fa-pen-nib"></i> DEVOLUTIVA DO COORDENADOR</label>
+                        <textarea id="c_dev" class="auto-save" rows="3" placeholder="Assinatura e parecer do coordenador(a)..."></textarea>
+                    </div>
+                </div>
+
+                <button class="btn-success" style="margin-top: 20px;" onclick="window.print()"><i class="fas fa-print"></i> Gerar Documento Oficial (PDF)</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- === LÓGICA JAVASCRIPT === -->
+    <script>
+        // 1. BANCO DE DADOS (LocalStorage sincronizado entre abas)
+        let DB = JSON.parse(localStorage.getItem('DB_Carbonita_2026_Final')) || {
+            habilidades_estruturadas: [],
+            escolas: ["E.M. Mestra Aurora"],
+            usuarios: {}
+        };
+        let usuarioAtual = '';
+        const componentesGerais = ["Língua Portuguesa", "Matemática", "Ciências da Natureza", "História", "Geografia", "Arte", "Educação Física", "Ensino Religioso"];
+
+        // Carrega dropdown de login
+        window.onload = () => {
+            const selLogin = document.getElementById('login-usuario');
+            selLogin.innerHTML = '<option value="">Selecione o seu nome...</option>';
+            Object.keys(DB.usuarios).forEach(nome => selLogin.innerHTML += `<option value="${nome}">${nome}</option>`);
+            renderizarBancoDeHabilidades();
+        };
+
+        // 2. FUNÇÕES DO FORMADOR
+        function addCursista() {
+            const nome = document.getElementById('f_novo_cursista').value.trim();
+            const senha = document.getElementById('f_nova_senha').value.trim();
+            if(!nome || !senha) return mostrarModal("Atenção", "Preencha o nome e a senha.");
+            if(DB.usuarios[nome]) return mostrarModal("Aviso", "Este cursista já existe.");
+
+            DB.usuarios[nome] = { senha: senha, dados: { etapa_atual: 'Identificação' } };
+            salvarBD();
+            document.getElementById('f_novo_cursista').value = ''; document.getElementById('f_nova_senha').value = '';
+            
+            // Atualiza select do login silenciosamente
+            const selLogin = document.getElementById('login-usuario');
+            selLogin.innerHTML += `<option value="${nome}">${nome}</option>`;
+            
+            mostrarModal("Sucesso", "Cursista cadastrado! Ele já pode fazer o login.");
+            atualizarRadar();
+        }
+
+        function addEscola() {
+            const e = document.getElementById('f_nova_escola').value.trim();
+            if(e && !DB.escolas.includes(e)) { DB.escolas.push(e); salvarBD(); mostrarModal("Sucesso", "Escola salva!"); document.getElementById('f_nova_escola').value=''; }
+        }
+
+        function processarHabilidadesPDF() {
+            const rawText = document.getElementById('f_raw_text').value;
+            const ano = document.getElementById('f_ano').value;
+            const comp = document.getElementById('f_comp').value;
+            const fonte = document.getElementById('f_fonte').value;
+
+            const regex = /(EF\d{2}[A-Z]{2}\d{2}[A-Z0-9]*)\s*[-–]?\s*([^\n\.]+)/gi;
+            let match; let count = 0;
+            
+            while ((match = regex.exec(rawText)) !== null) {
+                DB.habilidades_estruturadas.push({ codigo: match[1], texto: match[2].trim(), ano: ano, componente: comp, fonte: fonte });
+                count++;
+            }
+            if(count > 0) {
+                salvarBD();
+                mostrarModal("Banco Atualizado!", `Extraídas ${count} habilidades para ${ano} - ${comp}.`);
+                document.getElementById('f_raw_text').value = "";
+                renderizarBancoDeHabilidades();
+            } else {
+                mostrarModal("Erro", "Nenhum código BNCC encontrado no texto.");
+            }
+        }
+
+        function renderizarBancoDeHabilidades() {
+            const tb = document.getElementById('tbody-banco'); tb.innerHTML = '';
+            if(DB.habilidades_estruturadas.length === 0) {
+                tb.innerHTML = '<tr><td colspan="4" style="text-align:center;">Banco vazio.</td></tr>'; return;
+            }
+            DB.habilidades_estruturadas.forEach(h => {
+                tb.innerHTML += `<tr><td><strong>${h.codigo}</strong></td><td>${h.texto.substring(0,60)}...</td><td><span style="background:#e2e8f0; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${h.ano} | ${h.componente}</span></td><td>${h.fonte.split(' ')[0]}</td></tr>`;
+            });
+        }
+
+        function atualizarRadar() {
+            const tb = document.getElementById('tbody-radar'); tb.innerHTML = "";
+            DB = JSON.parse(localStorage.getItem('DB_Carbonita_2026_Final')) || DB;
+            
+            Object.keys(DB.usuarios).forEach(n => {
+                const d = DB.usuarios[n].dados;
+                if(d.ultima_acao) {
+                    tb.innerHTML += `<tr><td><strong>${n}</strong></td><td>${d.c_escola || '-'}</td><td><span style="color:var(--blue-primary); font-weight:bold;">${d.etapa_atual || 'Início'}</span></td><td><span style="background:var(--green-btn); color:white; padding:3px 8px; border-radius:12px; font-size:0.75rem;">${d.ultima_acao}</span></td></tr>`;
+                }
+            });
+        }
+
+        // --- 3. LOGIN E NAVEGAÇÃO ---
+        function iniciarSessao(tipo) {
+            document.querySelectorAll('.role-prof, .role-formador').forEach(el => el.style.display = 'none');
+            const badge = document.getElementById('badge-perfil');
+            
+            if(tipo === 'cursista') {
+                const nome = document.getElementById('login-usuario').value;
+                const senha = document.getElementById('login-senha').value;
+                if(!nome || DB.usuarios[nome].senha !== senha) return mostrarModal("Acesso Negado", "Verifique o nome e a senha.");
+                
+                usuarioAtual = nome;
+                badge.innerText = "CURSISTA: " + nome.split(' ')[0].toUpperCase();
+                badge.className = "badge tag-prof";
+                
+                document.getElementById('menu-professor').style.display = 'flex';
+                document.getElementById('menu-formador').style.display = 'none';
+                
+                preencherEscolas();
+                gerarBlocosDePlanos();
+                carregarDadosSessao();
+                trocarAba(document.querySelector('#menu-professor .pill-btn'), 'c-ident');
+            } else {
+                usuarioAtual = 'Formador';
+                badge.innerText = "FORMADOR MUNICIPAL";
+                badge.className = "badge tag-espec";
+                
+                document.getElementById('menu-professor').style.display = 'none';
+                document.getElementById('menu-formador').style.display = 'flex';
+                
+                atualizarRadar();
+                renderizarBancoDeHabilidades();
+                trocarAba(document.querySelector('#menu-formador .pill-btn'), 'f-cadastros');
+            }
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('app-view').style.display = 'block';
+        }
+
+        function terminarSessao() { location.reload(); }
+
+        function trocarAba(btn, idAba) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.pill-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(idAba).classList.add('active');
+            btn.classList.add('active');
+            
+            if(usuarioAtual !== 'Formador') {
+                DB.usuarios[usuarioAtual].dados.etapa_atual = btn.innerText;
+                salvarBD();
+            } else if (idAba === 'f-radar') {
+                atualizarRadar();
+            }
+        }
+
+        // --- 4. FUNÇÕES DO CURSISTA ---
+        function preencherEscolas() {
+            const sel = document.getElementById('c_escola'); sel.innerHTML = '<option value="">Selecione...</option>';
+            DB.escolas.forEach(e => sel.innerHTML += `<option value="${e}">${e}</option>`);
+        }
+
+        function gerarBlocosDePlanos() {
+            const cont = document.getElementById('container-planos'); cont.innerHTML = "";
+            let optComp = '<option value="">Componente da Aula...</option>';
+            componentesGerais.forEach(c => optComp += `<option value="${c}">${c}</option>`);
+
+            for(let i=1; i<=6; i++) {
+                cont.innerHTML += `
+                    <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:20px; page-break-inside: avoid;">
+                        <div style="font-weight:bold; color:var(--blue-primary); font-size:1.1rem; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">PLANO DE AULA ${i}</div>
+                        <div class="form-grid">
+                            <div><label>Componente:</label><select id="pa_comp_${i}" class="auto-save" onchange="filtrarHabDoPlano(${i})">${optComp}</select></div>
+                            <div>
+                                <label>Etapa:</label>
+                                <div style="display:flex; gap:10px; margin-top:5px;">
+                                    <label style="font-weight:normal;"><input type="radio" name="pa_et_${i}" value="Introdução" class="auto-save-radio"> Intro</label>
+                                    <label style="font-weight:normal;"><input type="radio" name="pa_et_${i}" value="Sistematização" class="auto-save-radio"> Sistematização</label>
+                                    <label style="font-weight:normal;"><input type="radio" name="pa_et_${i}" value="Avaliação" class="auto-save-radio"> Avaliação</label>
+                                </div>
+                            </div>
+                            <div class="form-full"><label>Habilidade do Banco:</label><select id="pa_hab_${i}" class="auto-save"><option value="">Selecione o componente...</option></select></div>
+                            <div class="form-full"><label>Prática Desenvolvida:</label><textarea id="pa_pratica_${i}" class="auto-save" rows="3"></textarea></div>
+                        </div>
+                    </div>
+                `;
+            }
+            vincularAutoSave();
+        }
+
+        function carregarHabsCursista() {
+            const ano = document.getElementById('c_ano').value;
+            const comps = Array.from(document.querySelectorAll('.auto-save-check:checked')).map(cb => cb.value);
+            const selHab = document.getElementById('c_hab');
+            selHab.innerHTML = '<option value="">Selecione a habilidade da Matriz...</option>';
+            
+            DB.habilidades_estruturadas.filter(h => h.ano === ano && comps.includes(h.componente)).forEach(h => {
+                selHab.innerHTML += `<option value="${h.codigo} - ${h.texto}">${h.codigo} [${h.fonte}]</option>`;
+            });
+        }
+
+        function filtrarHabDoPlano(i) {
+            const comp = document.getElementById(`pa_comp_${i}`).value;
+            const ano = document.getElementById('c_ano').value;
+            const sel = document.getElementById(`pa_hab_${i}`);
+            sel.innerHTML = '<option value="">Selecione...</option>';
+            
+            DB.habilidades_estruturadas.filter(h => h.componente === comp && (!ano || h.ano === ano)).forEach(h => {
+                sel.innerHTML += `<option value="${h.codigo} - ${h.texto}">${h.codigo}</option>`;
+            });
+        }
+
+        // Auto Save Seguro
+        function vincularAutoSave() {
+            document.querySelectorAll('.auto-save, .auto-save-check').forEach(c => { c.addEventListener('input', acionarSave); c.addEventListener('change', acionarSave); });
+            document.querySelectorAll('.auto-save-radio').forEach(c => { c.addEventListener('change', function() { if(this.checked){ DB.usuarios[usuarioAtual].dados[this.name] = this.value; acionarSave(); } }); });
+        }
+
+        let saveTimer;
+        function acionarSave() {
+            document.querySelectorAll('.auto-save-status').forEach(el => { el.innerHTML = "A guardar..."; el.style.color = "#f59e0b"; });
+            
+            if(this.type === 'checkbox') DB.usuarios[usuarioAtual].dados[this.value] = this.checked;
+            else if(this.id) DB.usuarios[usuarioAtual].dados[this.id] = this.value;
+            
+            DB.usuarios[usuarioAtual].dados.ultima_acao = new Date().toLocaleTimeString('pt-BR');
+            salvarBD();
+
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => { document.querySelectorAll('.auto-save-status').forEach(el => { el.innerHTML = "<i class='fas fa-check'></i> Salvo"; el.style.color = "var(--green-btn)"; }); }, 800);
+        }
+
+        function carregarDadosSessao() {
+            const d = DB.usuarios[usuarioAtual].dados;
+            if(!d) return;
+
+            document.querySelectorAll('.auto-save, .auto-save-check').forEach(c => {
+                if(c.type === 'checkbox') c.checked = d[c.value] || false;
+                else if(d[c.id]) c.value = d[c.id];
+            });
+            
+            for(let i=1; i<=6; i++) {
+                if(d[`pa_comp_${i}`]) { document.getElementById(`pa_comp_${i}`).value = d[`pa_comp_${i}`]; filtrarHabDoPlano(i); if(d[`pa_hab_${i}`]) document.getElementById(`pa_hab_${i}`).value = d[`pa_hab_${i}`]; }
+                if(d[`pa_et_${i}`]) { const r = document.querySelector(`input[name="pa_et_${i}"][value="${d[`pa_et_${i}`]}"]`); if(r) r.checked = true; }
+            }
+            carregarHabsCursista();
+            if(d.c_hab) document.getElementById('c_hab').value = d.c_hab;
+        }
+
+        function importarAlunos() {
+            const n = document.getElementById('paste_alunos').value.split('\n').filter(x => x.trim() !== '');
+            const tb = document.getElementById('tbody-alunos');
+            if(n.length === 0) return; tb.innerHTML = "";
+            n.forEach((nome, i) => { tb.innerHTML += `<tr><td>${i+1}</td><td><strong>${nome}</strong></td><td><input type="text" class="auto-save" id="al_ev_${i}"></td><td style="text-align:center;"><select class="auto-save" id="al_st_${i}"><option></option><option>S</option><option>N</option></select></td></tr>`; });
+            document.getElementById('paste_alunos').value = ""; vincularAutoSave();
+        }
+
+        function salvarBD() { localStorage.setItem('BD_Carbonita_Final2026', JSON.stringify(DB)); }
+        function mostrarModal(t, txt) { document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=txt; document.getElementById('custom-modal').style.display='flex'; }
+        function fecharModal() { document.getElementById('custom-modal').style.display='none'; }
+        
+        window.addEventListener('storage', e => { if(e.key === 'BD_Carbonita_Final2026' && currentRole === 'formador') atualizarRadar(); });
+    </script>
+</body>
+</html>
